@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Kicau Mania - Hand Tracker</title>
+    <meta name="description" content="Kicau Mania - Gerakkan tangan anda dan dengarkan kicau burung!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- ==================== LANDING PAGE ==================== -->
+    <div id="landingPage" class="landing-page">
+        <div class="landing-glow"></div>
+
+        <div class="landing-card">
+            <div class="camera-icon-wrap">
+                <div class="camera-icon-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="camera-icon-svg">
+                        <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="landing-title">Ready to Kicau?</h1>
+            <p class="landing-desc">
+                This experience needs <span class="text-teal">Camera</span> for
+                tracking and <span class="text-pink">Audio</span> for the viral "Kicau" remix.
+            </p>
+
+            <button id="startBtn" class="btn-start-camera">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" class="play-icon">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                START CAMERA
+            </button>
+
+            <div class="badges-row">
+                <div class="mini-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="badge-icon"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    AUDIO READY
+                </div>
+                <div class="mini-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="badge-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    SECURE
+                </div>
+            </div>
+
+            <div class="landing-divider"></div>
+            <p class="optimized-text">OPTIMIZED FOR IOS & ANDROID</p>
+        </div>
+
+        <footer class="landing-footer">
+            MADE WITH <span class="text-teal">LOVE</span> & <span class="text-pink">AI</span> BY <span class="text-teal">KICAU MANIA</span>
+        </footer>
+    </div>
+
+    <!-- ==================== TRACKING PAGE ==================== -->
+    <div id="trackingPage" class="tracking-page hidden">
+
+        <!-- Top Header -->
+        <div class="tracking-header">
+            <h2 class="tracking-title">Kicau Cam Trend</h2>
+            <p class="tracking-subtitle">
+                MOVE YOUR HANDS & WATCH THE MAGIC! <span class="wave-emoji">👋</span>
+            </p>
+        </div>
+
+        <!-- Camera Frame -->
+        <div class="camera-frame-wrap">
+            <div class="camera-frame" id="cameraFrame">
+                <!-- Loading state -->
+                <div class="cam-loading" id="camLoading">
+                    <div class="cam-loading-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                    </div>
+                    <p class="cam-loading-text">INITIALIZING AI<span class="dots">...</span></p>
+                </div>
+
+                <!-- Camera & Canvas -->
+                <video id="cameraFeed" autoplay playsinline muted></video>
+                <canvas id="handCanvas"></canvas>
+                <canvas id="particleCanvas"></canvas>
+
+                <!-- Detection Status Overlay -->
+                <div class="detect-overlay" id="detectOverlay">
+                    <div class="detect-badge idle" id="detectBadge">
+                        <span class="detect-dot"></span>
+                        <span id="detectText">SCANNING...</span>
+                    </div>
+                </div>
+
+                <!-- Motion Level Bar -->
+                <div class="motion-bar-wrap" id="motionBarWrap">
+                    <div class="motion-bar-label">MOTION</div>
+                    <div class="motion-bar-track">
+                        <div class="motion-bar-fill" id="motionBarFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instruction Banner -->
+            <div class="instruction-banner" id="instructionBanner">
+                Ayo mulai! Gerakkan tangan kamu di depan kamera 👋
+            </div>
+        </div>
+
+        <!-- Kicau Video Popup -->
+        <div class="kicau-popup hidden" id="kicauPopup">
+            <div class="kicau-popup-inner">
+                <div class="kicau-popup-header">
+                    <span class="kicau-rec"><span class="rec-dot"></span> KICAU MODE</span>
+                    <button class="kicau-close" id="kicauCloseBtn">&times;</button>
+                </div>
+                <video id="kicauVideo" loop playsinline>
+                    <source src="/static/kicau.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <!-- Kicau Active Banner -->
+        <div class="kicau-active-banner hidden" id="kicauActiveBanner">
+            <div class="sound-waves"><span></span><span></span><span></span><span></span><span></span></div>
+            <span>KICAU MODE AKTIF</span>
+            <div class="sound-waves"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="tracking-controls">
+            <button class="ctrl-btn" id="switchCamBtn" title="Switch Camera">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-3.2L15 5H9L7.2 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1z"/><circle cx="12" cy="13" r="3"/></svg>
+            </button>
+            <button class="ctrl-btn ctrl-primary" id="soundBtn" title="Sound">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+            </button>
+            <button class="ctrl-btn" id="fullscreenBtn" title="Fullscreen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- MediaPipe Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1675466124/drawing_utils.min.js" crossorigin="anonymous"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>
